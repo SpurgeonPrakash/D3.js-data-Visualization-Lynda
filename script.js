@@ -1,7 +1,7 @@
 var bardata = [];
 
 for (var i=0; i < 100; i++) {
-	bardata.push(Math.random()*30);
+	bardata.push(Math.round(Math.random()*30));
 }
 
 var height = 400,
@@ -21,6 +21,12 @@ var colors = d3.scale.linear()
 		.domain([0, bardata.length*.33, bardata.length*.66, bardata.length])
 		.range(['#FFB832', '#C61C6F', '#268BD2', '#85992C'])
 
+var tooltip = d3.select('body').append('div')
+		.style('position', 'absolute')
+		.style('padding', '0 10px')
+		.style('background', 'white')
+		.style('opacity', 0)
+
 var myChart = d3.select('#chart').append('svg')
 	.attr('width', width)
 	.attr('height', height)
@@ -36,6 +42,14 @@ var myChart = d3.select('#chart').append('svg')
 		.attr('height', 0)
 		.attr('y', height)
 	.on('mouseover', function(d) {
+
+		tooltip.transition()
+			.style('opacity', .9)
+
+		tooltip.html(d)
+			.style('left', (d3.event.pageX - 35) + 'px')
+			.style('top', (d3.event.pageY - 30) + 'px')
+
 		tempColor = this.style.fill;
 		d3.select(this)
 			.style('opacity', .5)
