@@ -1,4 +1,8 @@
-var bardata = [20, 30, 20, 15, 40, 80, 20, 30, 20, 15, 40, 80, 20, 30, 20, 15, 40, 80];
+var bardata = [];
+
+for (var i=0; i < 100; i++) {
+	bardata.push(Math.random()*30);
+}
 
 var height = 400,
 	width = 600,
@@ -13,13 +17,18 @@ var xScale = d3.scale.ordinal()
 		.domain(d3.range(0, bardata.length))
 		.rangeBands([0, width])
 
+var colors = d3.scale.linear()
+		.domain([0, bardata.length*.33, bardata.length*.66, bardata.length])
+		.range(['#FFB832', '#C61C6F', '#268BD2', '#85992C'])
+
 d3.select('#chart').append('svg')
 	.attr('width', width)
 	.attr('height', height)
-	.style('background', '#C9D7D6')
 	.selectAll('rect').data(bardata)
 	.enter().append('rect')
-		.style('fill', '#C61C6F')
+		.style('fill', function(d,i) {
+			return colors(i);
+		})
 		.attr('width', xScale.rangeBand())
 		.attr('height', function(d) {
 			return yScale(d);
